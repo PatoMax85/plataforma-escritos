@@ -482,7 +482,7 @@ function enviarFormulario() {
     }
   }
 
-  var datos = {
+  const datos = {
     tribunal: document.getElementById("tribunal").value,
     rolCausa: document.getElementById("rolCausa").value,
     caratulado: document.getElementById("caratulado").value,
@@ -494,7 +494,7 @@ function enviarFormulario() {
     desbloqueo: document.getElementById("desbloqueo")?.value || "",
     ejecutado: document.getElementById("ejecutadoNep")?.value ||
                document.getElementById("ejecutado")?.value || "",
-    fechaMora: ["nep_vencimiento", "nep_aceleracion_vencimiento","exc_aceleracion"].includes(tipoEscrito)
+    fechaMora: ["nep_vencimiento", "nep_aceleracion_vencimiento", "exc_aceleracion"].includes(tipoEscrito)
                 ? document.getElementById("fechaMora")?.value || "" : "",
     fechaDemanda: ["nep_vencimiento", "nep_aceleracion_vencimiento"].includes(tipoEscrito)
                 ? document.getElementById("fechaDemandaNotificacion")?.value || "" : "",
@@ -506,10 +506,10 @@ function enviarFormulario() {
     ejecutado_remision: document.getElementById("ejecutado_remision")?.value || "",
   };
 
-  // Selecciona dinámicamente el suscriptor correcto
-  if(["apelacion_firma", "apelacion_autocontrato", "apelacion_inoponibilidad", "repo_fea"].includes(tipoEscrito)){
+  // Selección dinámica del suscriptor
+  if (["apelacion_firma", "apelacion_autocontrato", "apelacion_inoponibilidad", "repo_fea"].includes(tipoEscrito)) {
     datos.suscriptor = document.getElementById("suscriptorApelacion").value;
-  } else if(["excepcion_inoponibilidad", "excepcion_autocontrato"].includes(tipoEscrito)){
+  } else if (["excepcion_inoponibilidad", "excepcion_autocontrato"].includes(tipoEscrito)) {
     datos.suscriptor = document.getElementById("suscriptorExcepcion").value;
   } else {
     datos.suscriptor = "";
@@ -517,25 +517,38 @@ function enviarFormulario() {
 
   mostrarSpinner();
 
-  google.script.run
-    .withSuccessHandler(function(urlPDF) {
-      ocultarSpinner();
-      if (urlPDF.includes("https://")) {
-        window.open(urlPDF, "_blank");
-        alert("✅ PDF generado. Descárgalo y súbelo a la OJV.");
-        document.getElementById("formulario").reset();
-        resetearCamposExtras();
-        google.script.run.registrarUsoEscrito(datos.tribunal, datos.tipoEscrito);
-      } else {
-        alert("⚠️ " + urlPDF);
-      }
-    })
-    .withFailureHandler(function(error) {
-      ocultarSpinner();
-      alert("❌ Error al generar el escrito: " + error.message);
-    })
-    .generarEscritoDesdeWeb(datos);
+  // ⚠️ Reemplaza esta URL con la URL real de tu Web App publicada en GAS
+  const urlWebApp = "https://script.google.com/macros/s/AKfycbxKuorq0ZPUfhIGJcT44uYR4pKif92ze2DDD4vVetLxY6gBZZgKuNGup9JFvx_R-lSS/exec";
+
+  fetch(urlWebApp, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(datos)
+  })
+  .then(response => response.json())
+  .then(respuesta => {
+    ocultarSpinner();
+    if (respuesta.url && respuesta.url.includes("https://")) {
+      window.open(respuesta.url, "_blank");
+      alert("✅ PDF generado. Descárgalo y súbelo a la OJV.");
+      document.getElementById("formulario").reset();
+      resetearCamposExtras();
+
+      // (opcional) Si quieres registrar uso con otra llamada fetch aquí
+      // fetch(urlWebApp + "?accion=registrarUso", { ... })
+    } else {
+      alert("⚠️ No se generó el PDF: " + (respuesta.error || "sin detalle"));
+    }
+  })
+  .catch(error => {
+    ocultarSpinner();
+    alert("❌ Error al generar el escrito: " + error.message);
+    console.error("Error fetch:", error);
+  });
 }
+
 
 
 document.addEventListener("DOMContentLoaded", mostrarCamposExtras);
