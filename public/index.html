@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="selectorModoContainer">
+  <label for="selectorModo"><strong>Modo:</strong></label>
+  <select id="selectorModo" onchange="cambiarModo()">
+    <option value="escritos">Generador de Escritos Judiciales</option>
+    <option value="pagos">Pagos a Receptor</option>
+    <option value="encargos">Encargos al Receptor</option>
+    <option value="desarchivo">Solicitud de Desarchivo</option>
+    <option value="rut-especial">Poder Notarial Simple</option>
+  </select>
+  <br />
+  <button id="verPlanillaBtn" onclick="verPlanilla()">📄 Planilla de Encargos/Pagos</button>
+  <br />
+  <button id="modoOscuroBtn" class="btn btn-secondary w-100" onclick="toggleTheme()">🌙 Modo Oscuro</button>
+
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const themeBtn = document.getElementById("modoOscuroBtn");
+    const currentTheme = html.getAttribute("data-theme");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    html.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+    actualizarTextoBoton(newTheme);
+  }
+
+  function actualizarTextoBoton(theme) {
+    const themeBtn = document.getElementById("modoOscuroBtn");
+    if (theme === "dark") {
+      themeBtn.innerText = "☀️ Modo Claro";
+    } else {
+      themeBtn.innerText = "🌙 Modo Oscuro";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const theme = savedTheme || (prefersDark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme);
+    actualizarTextoBoton(theme);
+  });
+</script>
+
+
+<div id="spinnerCarga" style="
+  display: none;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  font-weight: bold;
+  color: #0047ab;
+  z-index: 1000;
+">
+  ⏳ Procesando...
+</div>
+
+
+
+  <h2>Departamento Judicial Santiago</h2>
+
+<form id="formulario">
+  <h3>Generador de Escritos Judiciales</h3>
+  <label for="idCausa"><strong>Buscar Causa por ID:</strong></label>
+  <input type="text" id="idCausa" placeholder="Ingrese el ID de la causa">
+  <button type="button" onclick="buscarCausa()" style="margin-top: 10px;">Buscar</button>
+
+  <hr style="margin: 20px 0;">
+
+
+  <label>Tribunal:</label>
+  <select id="tribunal" required>
+    <option value="">Seleccione un tribunal</option>
+    <option value="1° Juzgado Civil de Santiago">1° Juzgado Civil de Santiago</option>
+    <option value="2° Juzgado Civil de Santiago">2° Juzgado Civil de Santiago</option>
+    <option value="3° Juzgado Civil de Santiago">3° Juzgado Civil de Santiago</option>
+    <option value="4° Juzgado Civil de Santiago">4° Juzgado Civil de Santiago</option>
+    <option value="5° Juzgado Civil de Santiago">5° Juzgado Civil de Santiago</option>
+    <option value="6° Juzgado Civil de Santiago">6° Juzgado Civil de Santiago</option>
+    <option value="7° Juzgado Civil de Santiago">7° Juzgado Civil de Santiago</option>
+    <option value="8° Juzgado Civil de Santiago">8° Juzgado Civil de Santiago</option>
+    <option value="9° Juzgado Civil de Santiago">9° Juzgado Civil de Santiago</option>
+    <option value="10° Juzgado Civil de Santiago">10° Juzgado Civil de Santiago</option>
+    <option value="11° Juzgado Civil de Santiago">11° Juzgado Civil de Santiago</option>
+    <option value="12° Juzgado Civil de Santiago">12° Juzgado Civil de Santiago</option>
+    <option value="13° Juzgado Civil de Santiago">13° Juzgado Civil de Santiago</option>
+    <option value="14° Juzgado Civil de Santiago">14° Juzgado Civil de Santiago</option>
+    <option value="15° Juzgado Civil de Santiago">15° Juzgado Civil de Santiago</option>
+    <option value="16° Juzgado Civil de Santiago">16° Juzgado Civil de Santiago</option>
+    <option value="17° Juzgado Civil de Santiago">17° Juzgado Civil de Santiago</option>
+    <option value="18° Juzgado Civil de Santiago">18° Juzgado Civil de Santiago</option>
+    <option value="19° Juzgado Civil de Santiago">19° Juzgado Civil de Santiago</option>
+    <option value="20° Juzgado Civil de Santiago">20° Juzgado Civil de Santiago</option>
+    <option value="21° Juzgado Civil de Santiago">21° Juzgado Civil de Santiago</option>
+    <option value="22° Juzgado Civil de Santiago">22° Juzgado Civil de Santiago</option>
+    <option value="23° Juzgado Civil de Santiago">23° Juzgado Civil de Santiago</option>
+    <option value="24° Juzgado Civil de Santiago">24° Juzgado Civil de Santiago</option>
+    <option value="25° Juzgado Civil de Santiago">25° Juzgado Civil de Santiago</option>
+    <option value="26° Juzgado Civil de Santiago">26° Juzgado Civil de Santiago</option>
+    <option value="27° Juzgado Civil de Santiago">27° Juzgado Civil de Santiago</option>
+    <option value="28° Juzgado Civil de Santiago">28° Juzgado Civil de Santiago</option>
+    <option value="29° Juzgado Civil de Santiago">29° Juzgado Civil de Santiago</option>
+    <option value="30° Juzgado Civil de Santiago">30° Juzgado Civil de Santiago</option>
+    <option value="1° Juzgado Civil de Puente Alto">1° Juzgado Civil de Puente Alto</option>
+    <option value="Juzgado de Letras de Colina">Juzgado de Letras de Colina</option>
+    <option value="1° Juzgado Civil de San Miguel">1° Juzgado Civil de San Miguel</option>
+    <option value="2° Juzgado Civil de San Miguel">2° Juzgado Civil de San Miguel</option>
+    <option value="3° Juzgado Civil de San Miguel">3° Juzgado Civil de San Miguel</option>
+    <option value="4° Juzgado Civil de San Miguel">4° Juzgado Civil de San Miguel</option>
+    <option value="1° Juzgado de Letras de San Bernardo">1° Juzgado de Letras de San Bernardo</option>
+    <option value="2° Juzgado de Letras de San Bernardo">2° Juzgado de Letras de San Bernardo</option>
+    <option value="1° Juzgado de Letras de Buin">1° Juzgado de Letras de Buin</option>
+    <option value="2° Juzgado de Letras de buin">2° Juzgado de Letras de Buin</option>
+    <option value="1° Juzgado de Letras de Melipilla">1° Juzgado de Letras de Melipilla</option>
+    <option value="1° Juzgado de Letras de Talagante">1° Juzgado de Letras de Talagante</option>
+    <option value="2° Juzgado de Letras de Talagante">2° Juzgado de Letras de Talagante</option>
+    <option value="Juzgado de Letras de Peñaflor">Juzgado de Letras de Peñaflor</option>
+  </select>
+
+  <label class="tooltip">Rol de Causa:
+  <span class="tooltiptext">Ejemplo: C-12345-2023. Incluye letra, número y año completo.</span>
+</label>
+<input type="text" id="rolCausa" required>
+
+  <label>Caratulado:</label>
+  <input type="text" id="caratulado" required>
+
+  <label>Tipo de Escrito:</label>
+  <select id="tipoEscrito" onchange="mostrarCamposExtras()" required>
+    <option value="">Seleccione un tipo de escrito</option>
+    <option value="excepcion_inoponibilidad">EXC 7 INOP</option>
+    <option value="excepcion_autocontrato">EXC 14 AUTOCTTO</option>
+    <option value="excepcion_autocontrato_cencosud">EXC 14 AUTOCTTO CENCOSUD</option>
+    <option value="excepcion_clinica">EXC 7 CLÍNICA</option>
+    <option value="excepcion_iliquidez">EXC7 ILIQUIDEZ</option>
+    <option value="excepcion_firma">EXC 7 FIRMA</option>
+    <option value="excepcion_firma_bancoChile">EXC 7 FIRMA BANCO DE CHILE</option>
+    <option value="exc_aceleracion">EXC17 ACELERACIÓN PARCIAL</option>
+    <option value="nep_vencimiento">NEP Vencimiento</option>
+    <option value="nep_aceleracion_vencimiento">NEP Aceleración Vencimiento</option>
+    <option value="ab6_sentencia">AB6 sentencia (con PyP)</option>
+    <option value="ab6_auto_prueba">AB6 auto de prueba (con PyP)</option>
+    <option value="ab3_mev_cumplase">AB3 cúmplase (con PyP)</option>
+    <option value="ab3_mev_embargo_muebles">AB3 embargo muebles</option>
+    <option value="ab3_recepcion_exhorto">AB3 recepción exhorto</option>
+    <option value="ab3_retiro_frustrado">AB3 retiro frustrado</option>
+    <option value="se_provean_excepciones">MON/EXC Se provean excepciones</option>
+    <option value="se_reciba_causa_prueba">MON/EXC Se reciba la causa a prueba</option>
+    <option value="omita_prueba_prescripcion">MON/PRES Omita prueba y cite a oír sentencia</option>
+    <option value="notificacion_auto_prueba">MON/EXC Notificación auto de prueba</option>
+    <option value="citacion_oir_sentencia">MON/EXC Citación a oír sentencia</option>
+    <option value="notificacion_sentencia_desbloqueo">MON/EXC Notificación sentencia y desbloqueo</option>
+    <option value="ejecutoria_excepciones">MON/EXC Ejecutoria excepciones</option>
+    <option value="se_provea_abandono">MON/AB Se provea abandono</option>
+    <option value="se_resuelva_abandono">MON/AB Se resuelva abandono</option>
+    <option value="ejecutoria_abandono">MON/AB Ejecutoria abandono</option>
+    <option value="apelacion_firma">APEL EXC 7 firma</option>
+    <option value="apelacion_autocontrato">APEL EXC 14 autocontrato</option>
+    <option value="apelacion_autocontrato_cencosud">APEL EXC 14 autocontrato CENCOSUD</option>
+    <option value="apelacion_inoponibilidad">APEL EXC 7 inoponibilidad</option>
+    <option value="apelacion_iliquidez">APEL EXC 7 iliquidez</option>
+    <option value="repo_fea">REPO FEA ambas partes</option>
+    <option value="repo_ter">REPO TER puntos de prueba</option>
+    <option value="desbloqueo_causa">Desbloqueo causa judicial</option>
+    <option value="devolucion_exhorto">Devolución exhorto</option>
+    <option value="notificacion_52">Solicita notificar por 52</option>
+    <option value="pide_cuenta_exhorto">Se pida cuenta de exhorto</option>
+    <option value="ejecutoria_alzamiento">Ejecutoria alzamiento</option>
+    <option value="objeta_minimo">Objeta mínimo subasta</option>
+    <option value="not_email">Solicita se notifique por email</option>
+    <option value="remision_lv">Remisión a LV</option>
+  </select>
+  
+<div id="camposExtras" class="hidden">
+  <label id="labelFecha">Fecha de Sentencia:
+  <span class="tooltip" style="margin-left: 6px; color: var(--primary-color); font-weight: bold;">?
+    <span class="tooltiptext">Corresponde a la fecha en que se dictó la resolución que se apela o ejecuta.</span>
+  </span>
+</label>
+<input type="date" id="fechaSentencia">
+</div>
+
+  <div id="bloqueSuscriptorApelacion" class="hidden">
+    <label>Suscriptor:</label>
+    <input type="text" id="suscriptorApelacion">
+  </div>
+
+
+  <div id="bloqueCorteApelaciones" class="hidden">
+    <label>Corte de Apelaciones:</label>
+    <select id="corteApelaciones">
+      <option value="">Seleccione una Corte</option>
+      <option value="I. Corte de Apelaciones de Santiago">I. Corte de Apelaciones de Santiago</option>
+      <option value="I. Corte de Apelaciones de San Miguel">I. Corte de Apelaciones de San Miguel</option>
+    </select>
+  </div>
+</div>
+
+<div id="ejecutadoExtras" class="hidden">
+  <label>Ejecutado:</label>
+  <input type="text" id="ejecutado">
+</div>
+
+<div id="bloqueSuscriptorExcepcion" class="hidden">
+  <label>Suscriptor:</label>
+  <input type="text" id="suscriptorExcepcion">
+</div>
+
+
+<div id="desbloqueoCausa" class="hidden">
+  <label>Ejecutado:</label>
+  <input type="text" id="desbloqueo">
+</div>
+
+<div id="nepExtras" class="hidden">
+  <label>Ejecutado:</label>
+  <input type="text" id="ejecutadoNep">
+
+  <label id="labelFechaMora">Fecha mora:</label>
+  <input type="date" id="fechaMora">
+
+  <label id="labelFechaDemandaNotificacion">Fecha demanda:</label>
+  <input type="date" id="fechaDemandaNotificacion">
+</div>
+
+<div id="remisionLvExtras" class="hidden">
+  <label for="tribunal_lv">Tribunal Liquidación Voluntaria:</label>
+<select id="tribunal_lv">
+  <option value="">Seleccione un tribunal</option>
+  <option value="1° Juzgado Civil de Santiago">1° Juzgado Civil de Santiago</option>
+  <option value="2° Juzgado Civil de Santiago">2° Juzgado Civil de Santiago</option>
+  <option value="3° Juzgado Civil de Santiago">3° Juzgado Civil de Santiago</option>
+  <option value="4° Juzgado Civil de Santiago">4° Juzgado Civil de Santiago</option>
+  <option value="5° Juzgado Civil de Santiago">5° Juzgado Civil de Santiago</option>
+  <option value="6° Juzgado Civil de Santiago">6° Juzgado Civil de Santiago</option>
+  <option value="7° Juzgado Civil de Santiago">7° Juzgado Civil de Santiago</option>
+  <option value="8° Juzgado Civil de Santiago">8° Juzgado Civil de Santiago</option>
+  <option value="9° Juzgado Civil de Santiago">9° Juzgado Civil de Santiago</option>
+  <option value="10° Juzgado Civil de Santiago">10° Juzgado Civil de Santiago</option>
+  <option value="11° Juzgado Civil de Santiago">11° Juzgado Civil de Santiago</option>
+  <option value="12° Juzgado Civil de Santiago">12° Juzgado Civil de Santiago</option>
+  <option value="13° Juzgado Civil de Santiago">13° Juzgado Civil de Santiago</option>
+  <option value="14° Juzgado Civil de Santiago">14° Juzgado Civil de Santiago</option>
+  <option value="15° Juzgado Civil de Santiago">15° Juzgado Civil de Santiago</option>
+  <option value="16° Juzgado Civil de Santiago">16° Juzgado Civil de Santiago</option>
+  <option value="17° Juzgado Civil de Santiago">17° Juzgado Civil de Santiago</option>
+  <option value="18° Juzgado Civil de Santiago">18° Juzgado Civil de Santiago</option>
+  <option value="19° Juzgado Civil de Santiago">19° Juzgado Civil de Santiago</option>
+  <option value="20° Juzgado Civil de Santiago">20° Juzgado Civil de Santiago</option>
+  <option value="21° Juzgado Civil de Santiago">21° Juzgado Civil de Santiago</option>
+  <option value="22° Juzgado Civil de Santiago">22° Juzgado Civil de Santiago</option>
+  <option value="23° Juzgado Civil de Santiago">23° Juzgado Civil de Santiago</option>
+  <option value="24° Juzgado Civil de Santiago">24° Juzgado Civil de Santiago</option>
+  <option value="25° Juzgado Civil de Santiago">25° Juzgado Civil de Santiago</option>
+  <option value="26° Juzgado Civil de Santiago">26° Juzgado Civil de Santiago</option>
+  <option value="27° Juzgado Civil de Santiago">27° Juzgado Civil de Santiago</option>
+  <option value="28° Juzgado Civil de Santiago">28° Juzgado Civil de Santiago</option>
+  <option value="29° Juzgado Civil de Santiago">29° Juzgado Civil de Santiago</option>
+  <option value="30° Juzgado Civil de Santiago">30° Juzgado Civil de Santiago</option>
+  <option value="1° Juzgado Civil de Puente Alto">1° Juzgado Civil de Puente Alto</option>
+  <option value="Juzgado de Letras de Colina">Juzgado de Letras de Colina</option>
+  <option value="1° Juzgado Civil de San Miguel">1° Juzgado Civil de San Miguel</option>
+  <option value="2° Juzgado Civil de San Miguel">2° Juzgado Civil de San Miguel</option>
+  <option value="3° Juzgado Civil de San Miguel">3° Juzgado Civil de San Miguel</option>
+  <option value="4° Juzgado Civil de San Miguel">4° Juzgado Civil de San Miguel</option>
+  <option value="1° Juzgado de Letras de San Bernardo">1° Juzgado de Letras de San Bernardo</option>
+  <option value="2° Juzgado de Letras de San Bernardo">2° Juzgado de Letras de San Bernardo</option>
+  <option value="1° Juzgado de Letras de Buin">1° Juzgado de Letras de Buin</option>
+  <option value="2° Juzgado de Letras de buin">2° Juzgado de Letras de Buin</option>
+  <option value="1° Juzgado de Letras de Melipilla">1° Juzgado de Letras de Melipilla</option>
+  <option value="1° Juzgado de Letras de Talagante">1° Juzgado de Letras de Talagante</option>
+  <option value="2° Juzgado de Letras de Talagante">2° Juzgado de Letras de Talagante</option>
+  <option value="Juzgado de Letras de Peñaflor">Juzgado de Letras de Peñaflor</option>
+</select>
+
+
+  <label for="rol_lv">Rol Liquidación Voluntaria:</label>
+  <input type="text" id="rol_lv">
+
+  <label for="caratulado_lv">Caratulado Liquidación Voluntaria:</label>
+  <input type="text" id="caratulado_lv">
+
+  <label for="ejecutado_remision">Ejecutado:</label>
+  <input type="text" id="ejecutado_remision">
+
+</div>
+
+  <button type="button" onclick="enviarFormulario()">Generar Escrito</button>
+
+<div id="guiaTip" class="hidden" style="margin-top: 20px; padding: 15px; border-left: 5px solid var(--primary-color); background: #eef4ff; color: #333; border-radius: 5px;"></div>
+
+  </form>
+
+   <!-- FORMULARIO DE PAGOS A RECEPTOR -->
+
+  <form id="formularioPagos" class="hidden">
+    <h3>Solicitud de Pago a Receptor</h3>
+
+
+    <label>Solicitante:</label>
+    <select id="solicitantePagos">
+  <option value="">Seleccione</option>
+    </select>
+
+
+    <label>ID Causa:</label>
+    <input type="text" id="idCausaPagos" onblur="autoCompletarCausa('Pagos')">
+
+    <button type="button" onclick="autoCompletarCausa('Pagos')">Buscar</button>
+
+
+    <label>Nombre Cliente:</label>
+    <input type="text" id="clientePagos">
+
+    <label>RUT:</label>
+    <input type="text" id="rutPagos">
+
+    <label>Rol Causa:</label>
+    <input type="text" id="rolPagos">
+
+    <label>Tribunal:</label>
+    <select id="tribunalPagos">
+      <option value="">Seleccione un tribunal</option>
+    <option value="1° Juzgado Civil de Santiago">1° Juzgado Civil de Santiago</option>
+    <option value="2° Juzgado Civil de Santiago">2° Juzgado Civil de Santiago</option>
+    <option value="3° Juzgado Civil de Santiago">3° Juzgado Civil de Santiago</option>
+    <option value="4° Juzgado Civil de Santiago">4° Juzgado Civil de Santiago</option>
+    <option value="5° Juzgado Civil de Santiago">5° Juzgado Civil de Santiago</option>
+    <option value="6° Juzgado Civil de Santiago">6° Juzgado Civil de Santiago</option>
+    <option value="7° Juzgado Civil de Santiago">7° Juzgado Civil de Santiago</option>
+    <option value="8° Juzgado Civil de Santiago">8° Juzgado Civil de Santiago</option>
+    <option value="9° Juzgado Civil de Santiago">9° Juzgado Civil de Santiago</option>
+    <option value="10° Juzgado Civil de Santiago">10° Juzgado Civil de Santiago</option>
+    <option value="11° Juzgado Civil de Santiago">11° Juzgado Civil de Santiago</option>
+    <option value="12° Juzgado Civil de Santiago">12° Juzgado Civil de Santiago</option>
+    <option value="13° Juzgado Civil de Santiago">13° Juzgado Civil de Santiago</option>
+    <option value="14° Juzgado Civil de Santiago">14° Juzgado Civil de Santiago</option>
+    <option value="15° Juzgado Civil de Santiago">15° Juzgado Civil de Santiago</option>
+    <option value="16° Juzgado Civil de Santiago">16° Juzgado Civil de Santiago</option>
+    <option value="17° Juzgado Civil de Santiago">17° Juzgado Civil de Santiago</option>
+    <option value="18° Juzgado Civil de Santiago">18° Juzgado Civil de Santiago</option>
+    <option value="19° Juzgado Civil de Santiago">19° Juzgado Civil de Santiago</option>
+    <option value="20° Juzgado Civil de Santiago">20° Juzgado Civil de Santiago</option>
+    <option value="21° Juzgado Civil de Santiago">21° Juzgado Civil de Santiago</option>
+    <option value="22° Juzgado Civil de Santiago">22° Juzgado Civil de Santiago</option>
+    <option value="23° Juzgado Civil de Santiago">23° Juzgado Civil de Santiago</option>
+    <option value="24° Juzgado Civil de Santiago">24° Juzgado Civil de Santiago</option>
+    <option value="25° Juzgado Civil de Santiago">25° Juzgado Civil de Santiago</option>
+    <option value="26° Juzgado Civil de Santiago">26° Juzgado Civil de Santiago</option>
+    <option value="27° Juzgado Civil de Santiago">27° Juzgado Civil de Santiago</option>
+    <option value="28° Juzgado Civil de Santiago">28° Juzgado Civil de Santiago</option>
+    <option value="29° Juzgado Civil de Santiago">29° Juzgado Civil de Santiago</option>
+    <option value="30° Juzgado Civil de Santiago">30° Juzgado Civil de Santiago</option>
+    <option value="1° Juzgado Civil de Puente Alto">1° Juzgado Civil de Puente Alto</option>
+    <option value="Juzgado de Letras de Colina">Juzgado de Letras de Colina</option>
+    <option value="1° Juzgado Civil de San Miguel">1° Juzgado Civil de San Miguel</option>
+    <option value="2° Juzgado Civil de San Miguel">2° Juzgado Civil de San Miguel</option>
+    <option value="3° Juzgado Civil de San Miguel">3° Juzgado Civil de San Miguel</option>
+    <option value="4° Juzgado Civil de San Miguel">4° Juzgado Civil de San Miguel</option>
+    <option value="1° Juzgado de Letras de San Bernardo">1° Juzgado de Letras de San Bernardo</option>
+    <option value="2° Juzgado de Letras de San Bernardo">2° Juzgado de Letras de San Bernardo</option>
+    <option value="1° Juzgado de Letras de Buin">1° Juzgado de Letras de Buin</option>
+    <option value="2° Juzgado de Letras de buin">2° Juzgado de Letras de Buin</option>
+    <option value="1° Juzgado de Letras de Melipilla">1° Juzgado de Letras de Melipilla</option>
+    <option value="1° Juzgado de Letras de Talagante">1° Juzgado de Letras de Talagante</option>
+    <option value="2° Juzgado de Letras de Talagante">2° Juzgado de Letras de Talagante</option>
+    <option value="Juzgado de Letras de Peñaflor">Juzgado de Letras de Peñaflor</option>
+    </select>
+
+    <label>Monto:</label>
+    <input type="number" id="montoPagos">
+
+    <label>Fecha de Pago:</label>
+    <input type="date" id="fechaPagoPagos">
+
+    <label>Tipo de Gestión:</label>
+    <select id="tipoGestionPagos">
+      <option value="">Seleccione</option>
+      <option value="Notificación">Notificación</option>
+      <option value="Alzamiento">Alzamiento</option>
+      <option value="Testimonial">Testimonial</option>
+    </select>
+
+    <label class="tooltip2">Precisar encargo: <span class="tooltiptext2">Ejemplo: Monto compuesto por dos pagos de distinta fecha; nombre del receptor de periferia</span></label>
+    
+<textarea id="precisarEncargoPagos" rows="4" style="width: 100%;"></textarea>
+
+    <!-- Fragmento HTML para campo de imagen en el formulario de pagos -->
+    <label>Comprobante (pega aquí el print de pantalla):</label>
+      <div id="contenedorImagen" contenteditable="true" 
+        style="border: 1px dashed #ccc; min-height: 150px; padding: 10px; background: #fdfdfd;">
+        <p style="color:#888;">Pega aquí tu imagen (Ctrl+V)</p>
+    </div>
+    <img id="imagenPreview" style="margin-top:10px; max-width:100%; display:none;">
+
+
+    <button type="button" onclick="guardarEncargo('pago_receptor')">Guardar Pago</button>
+  </form>
+
+  <!-- FORMULARIO DE ENCARGOS AL RECEPTOR -->
+  <form id="formularioEncargos" class="hidden">
+    <h3>Encargo al Receptor</h3>
+
+    <label>Tipo de Solicitud:</label>
+    <select id="estadoSolicitudEncargo">
+        <option value="">Seleccione</option>
+        <option value="Nueva Solicitud">Nueva Solicitud</option>
+        <option value="Reitera Solicitud">Reitera Solicitud</option>
+    </select>
+
+    <label>Solicitante:</label>
+    <select id="solicitanteEncargo">
+      <option value="">Seleccione</option>
+    </select>
+
+
+    <label>ID Causa:</label>
+    <input type="text" id="idCausaEncargo" onblur="autoCompletarCausa('Encargo')">
+
+    <button type="button" onclick="autoCompletarCausa('Encargo')">Buscar</button>
+
+
+    <label>Nombre Cliente:</label>
+    <input type="text" id="clienteEncargo">
+
+    <label>RUT:</label>
+    <input type="text" id="rutEncargo">
+
+    <label>Rol Causa:</label>
+    <input type="text" id="rolEncargo">
+
+    <label>Tribunal:</label>
+    <select id="tribunalEncargo">
+      <option value="">Seleccione un tribunal</option>
+    <option value="1° Juzgado Civil de Santiago">1° Juzgado Civil de Santiago</option>
+    <option value="2° Juzgado Civil de Santiago">2° Juzgado Civil de Santiago</option>
+    <option value="3° Juzgado Civil de Santiago">3° Juzgado Civil de Santiago</option>
+    <option value="4° Juzgado Civil de Santiago">4° Juzgado Civil de Santiago</option>
+    <option value="5° Juzgado Civil de Santiago">5° Juzgado Civil de Santiago</option>
+    <option value="6° Juzgado Civil de Santiago">6° Juzgado Civil de Santiago</option>
+    <option value="7° Juzgado Civil de Santiago">7° Juzgado Civil de Santiago</option>
+    <option value="8° Juzgado Civil de Santiago">8° Juzgado Civil de Santiago</option>
+    <option value="9° Juzgado Civil de Santiago">9° Juzgado Civil de Santiago</option>
+    <option value="10° Juzgado Civil de Santiago">10° Juzgado Civil de Santiago</option>
+    <option value="11° Juzgado Civil de Santiago">11° Juzgado Civil de Santiago</option>
+    <option value="12° Juzgado Civil de Santiago">12° Juzgado Civil de Santiago</option>
+    <option value="13° Juzgado Civil de Santiago">13° Juzgado Civil de Santiago</option>
+    <option value="14° Juzgado Civil de Santiago">14° Juzgado Civil de Santiago</option>
+    <option value="15° Juzgado Civil de Santiago">15° Juzgado Civil de Santiago</option>
+    <option value="16° Juzgado Civil de Santiago">16° Juzgado Civil de Santiago</option>
+    <option value="17° Juzgado Civil de Santiago">17° Juzgado Civil de Santiago</option>
+    <option value="18° Juzgado Civil de Santiago">18° Juzgado Civil de Santiago</option>
+    <option value="19° Juzgado Civil de Santiago">19° Juzgado Civil de Santiago</option>
+    <option value="20° Juzgado Civil de Santiago">20° Juzgado Civil de Santiago</option>
+    <option value="21° Juzgado Civil de Santiago">21° Juzgado Civil de Santiago</option>
+    <option value="22° Juzgado Civil de Santiago">22° Juzgado Civil de Santiago</option>
+    <option value="23° Juzgado Civil de Santiago">23° Juzgado Civil de Santiago</option>
+    <option value="24° Juzgado Civil de Santiago">24° Juzgado Civil de Santiago</option>
+    <option value="25° Juzgado Civil de Santiago">25° Juzgado Civil de Santiago</option>
+    <option value="26° Juzgado Civil de Santiago">26° Juzgado Civil de Santiago</option>
+    <option value="27° Juzgado Civil de Santiago">27° Juzgado Civil de Santiago</option>
+    <option value="28° Juzgado Civil de Santiago">28° Juzgado Civil de Santiago</option>
+    <option value="29° Juzgado Civil de Santiago">29° Juzgado Civil de Santiago</option>
+    <option value="30° Juzgado Civil de Santiago">30° Juzgado Civil de Santiago</option>
+    </select>
+
+    <label>Tipo de Encargo:</label>
+    <select id="tipoEncargoDescripcion">
+      <option value="">Seleccione</option>
+      <option value="sentencia definitiva">Sentencia definitiva</option>
+      <option value="traslado abandono">Traslado abandono</option>
+      <option value="traslado excepciones">Traslado excepciones</option>
+      <option value="auto de prueba">Auto de prueba</option>
+      <option value="desarchivo abandono">Desarchivo abandono</option>
+      <option value="desarchivo excepciones">Desarchivo excepciones</option>
+      <option value="alzamiento inmueble">Alzamiento inmueble</option>
+      <option value="alzamiento vehículo">Alzamiento vehículo</option>
+      <option value="alzamiento impuestos TGR">Alzamiento impuestos TGR</option>
+      <option value="desarchivo curso progresivo">Desarchivo curso progresivo</option>
+      <option value="otro">Otro</option>
+    </select>
+
+    <label>Fecha de Resolución:</label>
+    <input type="date" id="fechaResolucionEncargo">
+
+    <label>Folio:</label>
+    <input type="text" id="folioEncargo">
+
+    <label>Cuaderno:</label>
+    <select id="cuadernoEncargo">
+      <option value="">Seleccione</option>
+      <option value="Principal">Principal</option>
+      <option value="Apremio">Apremio</option>
+      <option value="Abandono">Abandono</option>
+      <option value="Tercería">Tercería</option>
+      <option value="Nulidad">Nulidad</option>
+    </select>
+
+      <label class="tooltip3">Precisar encargo: <span class="tooltiptext3">Ejemplo: (Reitera tarea) Fecha de encargo y de retiro expediente</span></label>
+    <textarea id="precisarEncargo" rows="4" style="width: 100%;"></textarea>
+
+    <button type="button" onclick="guardarEncargo('encargo_receptor')">Guardar Encargo</button>
+  </form>
+
+ <!-- FORMULARIO DESARCHIVOS E INFORMES -->
+
+  <form id="formularioDesarchivo" class="hidden">
+    <h3>Solicitud de Desarchivos e Informes</h3>
+
+    <label>Solicitante:</label>
+    <select id="solicitanteDesarchivo">
+  <option value="">Seleccione</option>
+    </select>
+
+    <label>ID Causa:</label>
+    <input type="text" id="idCausaDesarchivo" onblur="autoCompletarCausa('Desarchivo')">
+
+    <button type="button" onclick="autoCompletarCausa('Desarchivo')">Buscar</button>
+
+    <label>Nombre Cliente:</label>
+    <input type="text" id="clienteDesarchivo">
+
+    <label>RUT:</label>
+    <input type="text" id="rutDesarchivo">
+
+    <label>Rol Causa:</label>
+    <input type="text" id="rolDesarchivo">
+
+    <label>Tribunal:</label>
+    <select id="tribunalDesarchivo">
+      <option value="">Seleccione un tribunal</option>
+    <option value="1° Juzgado Civil de Santiago">1° Juzgado Civil de Santiago</option>
+    <option value="2° Juzgado Civil de Santiago">2° Juzgado Civil de Santiago</option>
+    <option value="3° Juzgado Civil de Santiago">3° Juzgado Civil de Santiago</option>
+    <option value="4° Juzgado Civil de Santiago">4° Juzgado Civil de Santiago</option>
+    <option value="5° Juzgado Civil de Santiago">5° Juzgado Civil de Santiago</option>
+    <option value="6° Juzgado Civil de Santiago">6° Juzgado Civil de Santiago</option>
+    <option value="7° Juzgado Civil de Santiago">7° Juzgado Civil de Santiago</option>
+    <option value="8° Juzgado Civil de Santiago">8° Juzgado Civil de Santiago</option>
+    <option value="9° Juzgado Civil de Santiago">9° Juzgado Civil de Santiago</option>
+    <option value="10° Juzgado Civil de Santiago">10° Juzgado Civil de Santiago</option>
+    <option value="11° Juzgado Civil de Santiago">11° Juzgado Civil de Santiago</option>
+    <option value="12° Juzgado Civil de Santiago">12° Juzgado Civil de Santiago</option>
+    <option value="13° Juzgado Civil de Santiago">13° Juzgado Civil de Santiago</option>
+    <option value="14° Juzgado Civil de Santiago">14° Juzgado Civil de Santiago</option>
+    <option value="15° Juzgado Civil de Santiago">15° Juzgado Civil de Santiago</option>
+    <option value="16° Juzgado Civil de Santiago">16° Juzgado Civil de Santiago</option>
+    <option value="17° Juzgado Civil de Santiago">17° Juzgado Civil de Santiago</option>
+    <option value="18° Juzgado Civil de Santiago">18° Juzgado Civil de Santiago</option>
+    <option value="19° Juzgado Civil de Santiago">19° Juzgado Civil de Santiago</option>
+    <option value="20° Juzgado Civil de Santiago">20° Juzgado Civil de Santiago</option>
+    <option value="21° Juzgado Civil de Santiago">21° Juzgado Civil de Santiago</option>
+    <option value="22° Juzgado Civil de Santiago">22° Juzgado Civil de Santiago</option>
+    <option value="23° Juzgado Civil de Santiago">23° Juzgado Civil de Santiago</option>
+    <option value="24° Juzgado Civil de Santiago">24° Juzgado Civil de Santiago</option>
+    <option value="25° Juzgado Civil de Santiago">25° Juzgado Civil de Santiago</option>
+    <option value="26° Juzgado Civil de Santiago">26° Juzgado Civil de Santiago</option>
+    <option value="27° Juzgado Civil de Santiago">27° Juzgado Civil de Santiago</option>
+    <option value="28° Juzgado Civil de Santiago">28° Juzgado Civil de Santiago</option>
+    <option value="29° Juzgado Civil de Santiago">29° Juzgado Civil de Santiago</option>
+    <option value="30° Juzgado Civil de Santiago">30° Juzgado Civil de Santiago</option>
+    <option value="1° Juzgado Civil de Puente Alto">1° Juzgado Civil de Puente Alto</option>
+    <option value="Juzgado de Letras de Colina">Juzgado de Letras de Colina</option>
+    <option value="1° Juzgado Civil de San Miguel">1° Juzgado Civil de San Miguel</option>
+    <option value="2° Juzgado Civil de San Miguel">2° Juzgado Civil de San Miguel</option>
+    <option value="3° Juzgado Civil de San Miguel">3° Juzgado Civil de San Miguel</option>
+    <option value="4° Juzgado Civil de San Miguel">4° Juzgado Civil de San Miguel</option>
+    <option value="1° Juzgado de Letras de San Bernardo">1° Juzgado de Letras de San Bernardo</option>
+    <option value="2° Juzgado de Letras de San Bernardo">2° Juzgado de Letras de San Bernardo</option>
+    <option value="1° Juzgado de Letras de Buin">1° Juzgado de Letras de Buin</option>
+    <option value="2° Juzgado de Letras de buin">2° Juzgado de Letras de Buin</option>
+    <option value="1° Juzgado de Letras de Melipilla">1° Juzgado de Letras de Melipilla</option>
+    <option value="1° Juzgado de Letras de Talagante">1° Juzgado de Letras de Talagante</option>
+    <option value="2° Juzgado de Letras de Talagante">2° Juzgado de Letras de Talagante</option>
+    <option value="Juzgado de Letras de Peñaflor">Juzgado de Letras de Peñaflor</option>
+    </select>
+
+    <label>Monto:</label>
+    <input type="number" id="montoDesarchivo">
+
+    <label>Fecha de Pago:</label>
+    <input type="date" id="fechaPagoDesarchivo">
+
+    <label>Tipo de Gestión:</label>
+    <select id="tipoGestionDesarchivo">
+      <option value="">Seleccione</option>
+      <option value="Desarchivo">Desarchivo</option>
+      <option value="Informe">Informe</option>
+      
+    </select>
+    <!-- Fragmento HTML para campo de imagen en el formulario de desarchivos -->
+    <label>Comprobante (pega aquí el print de pantalla):</label>
+  <div id="contenedorImagenDesarchivo" contenteditable="true" 
+     style="border: 1px dashed #ccc; min-height: 150px; padding: 10px; background: #fdfdfd;">
+    <p style="color:#888;">Pega aquí tu imagen (Ctrl+V)</p>
+  </div>
+  <img id="imagenPreviewDesarchivo" style="margin-top:10px; max-width:100%; display:none;">
+
+  <label>Precisar encargo: </label>
+  
+<textarea id="precisarEncargoDesarchivo" rows="4" style="width: 100%;"></textarea>
+
+
+  <button type="button" onclick="guardarEncargo('desarchivo')">Guardar Solicitud</button>
+</form>
+
+<!-- NUEVO FORMULARIO RUT ESPECIAL -->
+<form id="formulario-rut-especial" class="formulario hidden">
+  <label for="idCausaRut">ID de Causa:</label>
+  <input type="text" id="idCausaRut" placeholder="Ej: 123">
+
+  <button type="button" onclick="buscarDatosRutEspecial()">🔍 Buscar Causa</button>
+
+  <label for="fechaRut">Fecha:</label>
+  <input type="date" id="fechaRut" name="fecha" required>
+
+  <label for="ejecutadoRut">Ejecutado:</label>
+  <input type="text" id="ejecutadoRut" name="ejecutado" required>
+
+  <label for="ejecutanteRut">Ejecutante:</label>
+  <input type="text" id="ejecutanteRut" name="ejecutante" required>
+
+  <label for="rutNumerico">RUT:</label>
+  <input type="text" id="rutNumerico" name="rut" placeholder="Ej: 15318040-7" required>
+
+  <label for="rutTexto">RUT en palabras:</label>
+  <input type="text" id="rutTexto" name="rut2" readonly>
+
+  <button type="button" onclick="enviarFormularioRutEspecial()">📄 Generar escrito</button>
+</form>
+
+<div id="asistenteToggle" onclick="mostrarAsistente()" title="Asistente Jurídico">
+  💬
+</div>
+
+<div id="asistenteContainer" class="asistente-oculto">
+  <div class="card p-3">
+    <h6>Asistente Jurídico</h6>
+    <textarea id="consultaLegal" class="form-control mb-2" placeholder="Describe tu consulta jurídica..."></textarea>
+    <button class="btn btn-primary w-100" onclick="consultarIA()">Consultar</button>
+    <div id="respuestaIA" class="mt-2 small text-light"></div>
+  </div>
+</div>
+
+<!-- SPINNER DE CARGA -->
+<div id="loadingSpinner" class="hidden" style="
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255,255,255,0.9);
+  padding: 20px 30px;
+  border-radius: 10px;
+  text-align: center;
+  z-index: 9999;
+  box-shadow: 0px 0px 10px #999;
+">
+  <div style="
+    border: 4px solid #ccc;
+    border-top: 4px solid #0047ab;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: auto;
+  "></div>
+  <p style="margin-top: 10px; font-weight: bold; color: #0047ab;">Procesando solicitud...</p>
+</div>
+
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+<script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  function mostrarAsistente() {
+    const container = document.getElementById('asistenteContainer');
+    container.classList.toggle('asistente-visible');
+    container.classList.toggle('asistente-oculto');
+  }
+</script>
+<script>
+  function consultarIA() {
+    const consulta = document.getElementById('consultaLegal').value;
+    const respuestaContenedor = document.getElementById('respuestaIA');
+
+    if (!consulta.trim()) {
+      respuestaContenedor.innerHTML = `<div class="alert alert-warning">✋ Por favor escribe una consulta jurídica.</div>`;
+      return;
+    }
+
+    respuestaContenedor.innerHTML = "⏳ Procesando...";
+
+    google.script.run
+      .withSuccessHandler(function(respuesta) {
+        respuestaContenedor.innerHTML = `<div class="alert alert-info">${respuesta}</div>`;
+      })
+      .withFailureHandler(function(err) {
+        respuestaContenedor.innerHTML = `<div class="alert alert-danger">❌ Error: ${err.message}</div>`;
+      })
+      .obtenerSugerenciaIA(consulta);
+  }
+</script>
+</body>
+</html>
