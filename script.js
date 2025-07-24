@@ -525,24 +525,37 @@ function enviarFormulario() {
   headers: {
     "Content-Type": "text/plain;charset=utf-8",
   },
-  body: JSON.stringify(datos)
+  body: JSON.stringify(datos),
+  redirect: 'follow'
+
 })
-.then(response => response.json())
+.then(response => {
+  // Siempre es bueno verificar si la respuesta es exitosa
+  if (!response.ok) {
+    // Si hay un error HTTP (ej. 404, 500), lanzamos un error
+    return response.text().then(text => {
+        throw new Error(`HTTP error! status: ${response.status}, message: ${text}`);
+    });
+  }
+  // Si la respuesta es OK, intentamos parsear como JSON
+  return response.json();
+})
 .then(data => {
   ocultarSpinner();
-  if (data.url && data.url.includes("https://")) {
+  if (data.url && typeof data.url === 'string' && data.url.includes("https://")) {
     window.open(data.url, "_blank");
     alert("✅ PDF generado. Descárgalo y súbelo a la OJV.");
     document.getElementById("formulario").reset();
     resetearCamposExtras();
   } else {
-    alert("⚠️ Hubo un error: " + data.url);
+    // Esto capturará casos donde 'data.url' no es lo esperado
+    alert("⚠️ Hubo un error al obtener la URL del PDF. Respuesta: " + JSON.stringify(data));
   }
 })
 .catch(error => {
   ocultarSpinner();
   console.error("❌ Error en fetch:", error);
-  alert("❌ Error al generar el escrito: " + error.message);
+  alert("❌ Error al generar el escrito: " + error.message + ". Por favor, revisa la consola para más detalles.");
 });
 
 
