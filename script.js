@@ -518,7 +518,7 @@ function enviarFormulario() {
   mostrarSpinner();
 
   // ⚠️ Reemplaza esta URL con la URL real de tu Web App publicada en GAS
-  const URL_WEBAPP = "https://script.google.com/macros/s/AKfycbxDpM0YchTIYcL5_yG9QRLesxbt09gFK0S6u4OOqwwTI3vCF6PRcIbx2sVVPU0SSO7n/exec";
+  const URL_WEBAPP = "https://script.google.com/macros/s/AKfycbxw-TnmxLSnfMmvyuv36U_gUBKxq2mIHHtR9-IFRyx9tLftB7jXm0QJ1VDPf7ASK5UX/exec";
 
   fetch(URL_WEBAPP, {
   method: "POST",
