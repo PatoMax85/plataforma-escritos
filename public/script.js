@@ -518,15 +518,16 @@ function enviarFormulario() {
   mostrarSpinner();
 
   // ⚠️ Reemplaza esta URL con la URL real de tu Web App publicada en GAS
-  const urlWebApp = "https://script.google.com/macros/s/AKfycbyw_QRsuoWCwkq-j4ZNFAyIkCvJq-jCzUP14tG53o6Z3nHgGQ5pKnxTaEetxuIOOF0/exec";
+  const urlWebApp = "https://script.google.com/macros/s/AKfycbwF2hHZ3MfwWko-Y7lwQ5ccQB1Rx1YDDU-OXGJFFvLJ8i8DyEprprtUrWmK7ItsjVSm/exec";
 
-  fetch(urlWebApp, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(datos)
-  })
+  fetch(URL_WEBAPP, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  body: "datos=" + encodeURIComponent(JSON.stringify(datos))
+})
+
   .then(response => response.json())
   .then(respuesta => {
     ocultarSpinner();
