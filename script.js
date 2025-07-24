@@ -1124,8 +1124,4 @@ function buscarDatosCausaRut() {
     })
     .obtenerDatosCausa(id);
 }
-/*fetch("https://script.google.com/macros/s/AKfycbyw_QRsuoWCwkq-j4ZNFAyIkCvJq-jCzUP14tG53o6Z3nHgGQ5pKnxTaEetxuIOOF0/exec", {
-  method: "OPTIONS"
-})
-.then(res => console.log("✅ OPTIONS passed:", res))
-.catch(err => console.error("❌ OPTIONS failed:", err));*/
+}
