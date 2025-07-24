@@ -523,32 +523,28 @@ function enviarFormulario() {
   fetch(URL_WEBAPP, {
   method: "POST",
   headers: {
-    "Content-Type": "application/x-www-form-urlencoded"
+    "Content-Type": "application/json"
   },
-  body: "datos=" + encodeURIComponent(JSON.stringify(datos))
+  body: JSON.stringify(datos)
 })
+.then(response => response.json())
+.then(data => {
+  ocultarSpinner();
+  if (data.url && data.url.includes("https://")) {
+    window.open(data.url, "_blank");
+    alert("✅ PDF generado. Descárgalo y súbelo a la OJV.");
+    document.getElementById("formulario").reset();
+    resetearCamposExtras();
+  } else {
+    alert("⚠️ Hubo un error: " + data.url);
+  }
+})
+.catch(error => {
+  ocultarSpinner();
+  console.error("❌ Error en fetch:", error);
+  alert("❌ Error al generar el escrito: " + error.message);
+});
 
-  .then(response => response.json())
-  .then(respuesta => {
-    ocultarSpinner();
-    if (respuesta.url && respuesta.url.includes("https://")) {
-      window.open(respuesta.url, "_blank");
-      alert("✅ PDF generado. Descárgalo y súbelo a la OJV.");
-      document.getElementById("formulario").reset();
-      resetearCamposExtras();
-
-      // (opcional) Si quieres registrar uso con otra llamada fetch aquí
-      // fetch(urlWebApp + "?accion=registrarUso", { ... })
-    } else {
-      alert("⚠️ No se generó el PDF: " + (respuesta.error || "sin detalle"));
-    }
-  })
-  .catch(error => {
-    ocultarSpinner();
-    alert("❌ Error al generar el escrito: " + error.message);
-    console.error("Error fetch:", error);
-  });
-}
 
 
 
@@ -1128,8 +1124,8 @@ function buscarDatosCausaRut() {
     })
     .obtenerDatosCausa(id);
 }
-fetch("https://script.google.com/macros/s/AKfycbyw_QRsuoWCwkq-j4ZNFAyIkCvJq-jCzUP14tG53o6Z3nHgGQ5pKnxTaEetxuIOOF0/exec", {
+/*fetch("https://script.google.com/macros/s/AKfycbyw_QRsuoWCwkq-j4ZNFAyIkCvJq-jCzUP14tG53o6Z3nHgGQ5pKnxTaEetxuIOOF0/exec", {
   method: "OPTIONS"
 })
 .then(res => console.log("✅ OPTIONS passed:", res))
-.catch(err => console.error("❌ OPTIONS failed:", err));
+.catch(err => console.error("❌ OPTIONS failed:", err));*/
